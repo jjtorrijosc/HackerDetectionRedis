@@ -26,7 +26,7 @@ public class SigninFailureDaoImpl implements SigninFailureDao {
 		//repo does not implement count
 		//not create "timestamp" index, filter by stream
 		 return signinFailureRepo.findByIp(ip).stream()
-				 .filter(e -> e.getTimestamp() >= timestamp)
+				 .filter(e -> e != null && e.getTimestamp() >= timestamp)
 				 .count();
 	}
 
@@ -38,7 +38,7 @@ public class SigninFailureDaoImpl implements SigninFailureDao {
 			StreamSupport.stream(
 						signinFailureRepo.findAll().spliterator(),
 						Boolean.FALSE)
-				.filter(e -> e.getTimestamp() >= timestamp)
+				.filter(e -> e != null && e.getTimestamp() >= timestamp)
 				.sorted(Comparator.comparing(SigninFailure::getTimestamp))
 				.findFirst();
 		if (optionalFirstSigninSince.isPresent()) {

@@ -7,7 +7,7 @@ import org.springframework.data.redis.core.index.Indexed;
 import lombok.Data;
 
 //the key expires (Redis automatically delete it) after 5 minutes
-@RedisHash(value="SigninFailure", timeToLive=300000)
+@RedisHash(value="SigninFailure", timeToLive=300L)
 @Data
 public class SigninFailure {
 	

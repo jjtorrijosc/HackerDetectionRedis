@@ -15,6 +15,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
+import com.hackertest.dao.SigninFailureRepo;
+
 @SpringBootTest
 @AutoConfigureMockMvc
 class HackerDetectionSystemApplicationTests {
@@ -22,8 +24,13 @@ class HackerDetectionSystemApplicationTests {
 	@Autowired
 	MockMvc mock;
 	
+	@Autowired
+	SigninFailureRepo signinFailureRepo;
+	
+	@Order(1)
 	@Test
 	void testSigninSucess() throws Exception {
+		signinFailureRepo.deleteAll();
 		mock.perform(post("/parseLine")
 			.contentType(MediaType.TEXT_PLAIN_VALUE)
 			.content(new StringBuffer()
@@ -34,6 +41,7 @@ class HackerDetectionSystemApplicationTests {
 		 .andExpect(jsonPath("$").doesNotExist());
 	}
 	
+	@Order(2)
 	@Test
 	void testFirstSigninFailure() throws Exception {
 		mock.perform(post("/parseLine")
@@ -46,6 +54,7 @@ class HackerDetectionSystemApplicationTests {
 		 .andExpect(jsonPath("$").doesNotExist());
 	}
 	
+	@Order(3)
 	@Test
 	void testSecondSigninFailure() throws Exception {
 		
@@ -61,6 +70,7 @@ class HackerDetectionSystemApplicationTests {
 		}
 	}
 	
+	@Order(4)
 	@Test
 	void testThirdSigninFailure() throws Exception {
 		
@@ -76,6 +86,7 @@ class HackerDetectionSystemApplicationTests {
 		}
 	}
 	
+	@Order(5)
 	@Test
 	void testFourthSigninFailure() throws Exception {
 		
@@ -91,6 +102,7 @@ class HackerDetectionSystemApplicationTests {
 		}	
 	}
 	
+	@Order(6)
 	@Test
 	void testFifthSigninFailure() throws Exception {
 		
@@ -115,7 +127,7 @@ class HackerDetectionSystemApplicationTests {
 		 .andExpect(content().string("5.5.5.5"));
 	}
 	
-	@Order(1)
+	@Order(7)
 	@Test
 	void testFifthSigninFailureAfter4Minutes() throws Exception {
 		
@@ -142,6 +154,7 @@ class HackerDetectionSystemApplicationTests {
 			 .andExpect(content().string("6.6.6.6"));
 	}
 	
+	@Order(8)
 	@Test
 	void testFifthSigninFailureAfter5Minutes() throws Exception {
 		
