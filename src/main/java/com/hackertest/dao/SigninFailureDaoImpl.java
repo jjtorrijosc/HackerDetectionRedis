@@ -23,16 +23,11 @@ public class SigninFailureDaoImpl implements SigninFailureDao {
 	@Override
 	public long countLastSigninFailures(String ip, long timestamp) {
 		
-		//Redis hashes does not support count and queries by another field than id
-		//we solve this problem with Streams, but performance may be worse
-		 return StreamSupport.stream(
-							signinFailureRepo.findAll().spliterator(),
-							Boolean.FALSE)
-				.filter(e -> e != null 
-								&& e instanceof SigninFailure
-								&& e.getIp().equals(ip) 
-								&& e.getTimestamp() > timestamp)
-				.count();
+		//repo does not implement count
+		//not create "timestamp" index, filter by stream
+		 return signinFailureRepo.findByIp(ip).stream()
+				 .filter(e -> e.getTimestamp() >= timestamp)
+				 .count();
 	}
 
 	@Override
@@ -43,10 +38,7 @@ public class SigninFailureDaoImpl implements SigninFailureDao {
 			StreamSupport.stream(
 						signinFailureRepo.findAll().spliterator(),
 						Boolean.FALSE)
-				.filter(e -> e != null 
-								&& e instanceof SigninFailure
-								&& e.getIp().equals(ip) 
-								&& e.getTimestamp() > timestamp)
+				.filter(e -> e.getTimestamp() >= timestamp)
 				.sorted(Comparator.comparing(SigninFailure::getTimestamp))
 				.findFirst();
 		if (optionalFirstSigninSince.isPresent()) {

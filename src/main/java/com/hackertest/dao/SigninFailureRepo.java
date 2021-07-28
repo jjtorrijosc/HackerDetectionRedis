@@ -1,5 +1,7 @@
 package com.hackertest.dao;
 
+import java.util.List;
+
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
@@ -12,7 +14,5 @@ public interface SigninFailureRepo extends CrudRepository<SigninFailure, String>
 	public SigninFailure save(SigninFailure signinFailure);
 	
 //	public long countByIp(String ip);
-//	public List<SigninFailure> findByIp(String ip);
-//	public Optional<SigninFailure> findById(String id);
-//	public List<SigninFailure> findAllByIp(String ip);
+	public List<SigninFailure> findByIp(String ip);
 }
