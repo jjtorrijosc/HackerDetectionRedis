@@ -9,10 +9,10 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.example</groupId>
-	<artifactId>HackerDetectionSystem</artifactId>
+	<artifactId>HackerDetectionRedisRepo</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>HackerDetectionSystem</name>
-	<description>Hacker detection system</description>
+	<name>HackerDetectionRedisRepo</name>
+	<description>Hacker detection system (Redis repo)</description>
 	<properties>
 		<java.version>1.8</java.version>
 		<maven.test.skip>true</maven.test.skip>
@@ -20,7 +20,7 @@
 	<dependencies>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-data-mongodb</artifactId>
+			<artifactId>spring-boot-starter-data-redis</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
