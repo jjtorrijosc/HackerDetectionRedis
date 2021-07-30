@@ -5,7 +5,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import java.util.Date;
+import java.util.Calendar;
 
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
@@ -31,11 +31,12 @@ class HackerDetectionSystemApplicationTests {
 	@Test
 	void testSigninSucess() throws Exception {
 		signinFailureRepo.deleteAll();
+		Long timeIni = Calendar.getInstance().getTimeInMillis();
 		mock.perform(post("/parseLine")
 			.contentType(MediaType.TEXT_PLAIN_VALUE)
 			.content(new StringBuffer()
 						.append("80.238.9.179,")
-						.append(new Date().getTime())
+						.append(timeIni)
 						.append(",SIGNIN_SUCCESS,Will.Smith").toString())
 		).andExpect(status().isOk())
 		 .andExpect(jsonPath("$").doesNotExist());
@@ -44,11 +45,12 @@ class HackerDetectionSystemApplicationTests {
 	@Order(2)
 	@Test
 	void testFirstSigninFailure() throws Exception {
+		Long timeIni = Calendar.getInstance().getTimeInMillis();
 		mock.perform(post("/parseLine")
 			.contentType(MediaType.TEXT_PLAIN_VALUE)
 			.content(new StringBuffer()
 						.append("80.238.9.179,")
-						.append(new Date().getTime())
+						.append(timeIni)
 						.append(",SIGNIN_FAILURE,Will.Smith").toString())
 		).andExpect(status().isOk())
 		 .andExpect(jsonPath("$").doesNotExist());
@@ -58,15 +60,19 @@ class HackerDetectionSystemApplicationTests {
 	@Test
 	void testSecondSigninFailure() throws Exception {
 		
+		Long time = Calendar.getInstance().getTimeInMillis();
 		for (int repeat=2; repeat>0; repeat--) {
 			mock.perform(post("/parseLine")
 				.contentType(MediaType.TEXT_PLAIN_VALUE)
 				.content(new StringBuffer()
 							.append("2.2.2.2,")
-							.append(new Date().getTime())
+							.append(time)
 							.append(",SIGNIN_FAILURE,Will.Smith").toString())
 			).andExpect(status().isOk())
 			 .andExpect(jsonPath("$").doesNotExist());
+
+			//increment timestamp
+			time+=1000;
 		}
 	}
 	
@@ -74,15 +80,19 @@ class HackerDetectionSystemApplicationTests {
 	@Test
 	void testThirdSigninFailure() throws Exception {
 		
+		Long time = Calendar.getInstance().getTimeInMillis();
 		for (int repeat=3; repeat>0; repeat--) {
 			mock.perform(post("/parseLine")
 				.contentType(MediaType.TEXT_PLAIN_VALUE)
 				.content(new StringBuffer()
 							.append("3.3.3.3,")
-							.append(new Date().getTime())
+							.append(time)
 							.append(",SIGNIN_FAILURE,Will.Smith").toString())
 			).andExpect(status().isOk())
 			 .andExpect(jsonPath("$").doesNotExist());
+			
+			//increment timestamp
+			time+=1000;
 		}
 	}
 	
@@ -90,15 +100,19 @@ class HackerDetectionSystemApplicationTests {
 	@Test
 	void testFourthSigninFailure() throws Exception {
 		
+		Long time = Calendar.getInstance().getTimeInMillis();
 		for (int repeat=4; repeat>0; repeat--) {
 			mock.perform(post("/parseLine")
 					.contentType(MediaType.TEXT_PLAIN_VALUE)
 					.content(new StringBuffer()
 							.append("4.4.4.4,")
-							.append(new Date().getTime())
+							.append(time)
 							.append(",SIGNIN_FAILURE,Will.Smith").toString())
 				).andExpect(status().isOk())
 				 .andExpect(jsonPath("$").doesNotExist());
+			
+			//increment timestamp
+			time+=1000;
 		}	
 	}
 	
@@ -106,22 +120,26 @@ class HackerDetectionSystemApplicationTests {
 	@Test
 	void testFifthSigninFailure() throws Exception {
 		
+		Long time = Calendar.getInstance().getTimeInMillis();
 		for (int repeat=4; repeat>0; repeat--) {
 			mock.perform(post("/parseLine")
 				.contentType(MediaType.TEXT_PLAIN_VALUE)
 				.content(new StringBuffer()
 							.append("5.5.5.5,")
-							.append(new Date().getTime())
+							.append(time)
 							.append(",SIGNIN_FAILURE,Will.Smith").toString())
 			).andExpect(status().isOk())
 			 .andExpect(jsonPath("$").doesNotExist());
+			
+			//increment timestamp
+			time+=1000;
 		}
 		
 		mock.perform(post("/parseLine")
 			.contentType(MediaType.TEXT_PLAIN_VALUE)
 			.content(new StringBuffer()
 					.append("5.5.5.5,")
-					.append(new Date().getTime())
+					.append(time)
 					.append(",SIGNIN_FAILURE,Will.Smith").toString())
 		).andExpect(status().isOk())
 		 .andExpect(content().string("5.5.5.5"));
@@ -131,24 +149,29 @@ class HackerDetectionSystemApplicationTests {
 	@Test
 	void testFifthSigninFailureAfter4Minutes() throws Exception {
 		
+		Long time = Calendar.getInstance().getTimeInMillis();
 		for (int repeat=4; repeat>0; repeat--) {
 			mock.perform(post("/parseLine")
 				.contentType(MediaType.TEXT_PLAIN_VALUE)
 				.content(new StringBuffer()
 							.append("6.6.6.6,")
-							.append(new Date().getTime())
+							.append(time)
 							.append(",SIGNIN_FAILURE,Will.Smith").toString())
 			).andExpect(status().isOk())
 			 .andExpect(jsonPath("$").doesNotExist());
+			
+			//increment timestamp
+			time+=1000;
 		}
 		//sleep 4 minutes
-		Thread.sleep(240000);
+//		Thread.sleep(240000);
+		time+=240000;
 		
 		mock.perform(post("/parseLine")
 				.contentType(MediaType.TEXT_PLAIN_VALUE)
 				.content(new StringBuffer()
 						.append("6.6.6.6,")
-						.append(new Date().getTime())
+						.append(time)
 						.append(",SIGNIN_FAILURE,Will.Smith").toString())
 			).andExpect(status().isOk())
 			 .andExpect(content().string("6.6.6.6"));
@@ -158,24 +181,29 @@ class HackerDetectionSystemApplicationTests {
 	@Test
 	void testFifthSigninFailureAfter5Minutes() throws Exception {
 		
+		Long time = Calendar.getInstance().getTimeInMillis();
 		for (int repeat=4; repeat>0; repeat--) {
 			mock.perform(post("/parseLine")
 				.contentType(MediaType.TEXT_PLAIN_VALUE)
 				.content(new StringBuffer()
 							.append("7.7.7.7,")
-							.append(new Date().getTime())
+							.append(time)
 							.append(",SIGNIN_FAILURE,Will.Smith").toString())
 			).andExpect(status().isOk())
 			 .andExpect(jsonPath("$").doesNotExist());
+			
+			//increment timestamp
+			time+=1000;
 		}
 		//sleep > 5 minutes
-		Thread.sleep(301000);
+//		Thread.sleep(301000);
+		time+=301000;
 		
 		mock.perform(post("/parseLine")
 				.contentType(MediaType.TEXT_PLAIN_VALUE)
 				.content(new StringBuffer()
 						.append("7.7.7.7,")
-						.append(new Date().getTime())
+						.append(time)
 						.append(",SIGNIN_FAILURE,Will.Smith").toString())
 			).andExpect(status().isOk())
 		 	.andExpect(jsonPath("$").doesNotExist());
